@@ -1,22 +1,25 @@
 import * as Flex from '@twilio/flex-ui';
-import {useState, useEffect} from "react"
-import { Stack} from "@twilio-paste/core"
+import { useState, useEffect } from 'react';
+import { Stack } from '@twilio-paste/core';
 import { ConversationState, styled, Actions } from '@twilio/flex-ui';
-import { Participants } from "./Participants.tsx/Participants"
-import { InviteParticipant } from "./InviteParticipant/InviteParticipant"
+
+import { Participants } from './Participants.tsx/Participants';
 import { InvitedParticipants } from './InvitedParticipants/InvitedParticipants';
-import { ParticipantDetails } from "../../types/ParticipantDetails"
+import { ParticipantDetails } from '../../types/ParticipantDetails';
 import { InvitedParticipantDetails } from '../../types/InvitedParticipantDetails';
-import { getUpdatedParticipantDetails, getUpdatedInvitedParticipantDetails } from "./hooks"
-import { checkAndRemoveOldInvitedParticipants, countOfOutstandingInvitesForConversation } from "../../helpers/inviteTracker";
-import { CancelChatParticipantInviteActionPayload, RemoveChatParticipantActionPayload} from "../../types/ActionPayloads"
+import { getUpdatedParticipantDetails, getUpdatedInvitedParticipantDetails } from './hooks';
+import {
+  CancelChatParticipantInviteActionPayload,
+  RemoveChatParticipantActionPayload,
+} from '../../types/ActionPayloads';
 
 const ParticipantsTabContainer = styled.div`
   padding-left: 3%;
   padding-right: 3%;
   padding-top: 3%;
   width: 100%;
-`
+  overflow-y: scroll;
+`;
 
 interface ParticipantsTabProps {
   task: Flex.ITask;
@@ -24,56 +27,43 @@ interface ParticipantsTabProps {
 }
 
 export const ParticipantsTab = ({ task, conversation }: ParticipantsTabProps) => {
-  const [participantDetails, setParticipantDetails] = useState<ParticipantDetails[]>([])
-  const [invitedParticipantDetails, setInvitedParticipantDetails] = useState<InvitedParticipantDetails[]>([])
-  const [disableNewInvites, setDisableNewInvites] = useState<boolean>(false)
+  const [participantDetails, setParticipantDetails] = useState<ParticipantDetails[]>([]);
+  const [invitedParticipantDetails, setInvitedParticipantDetails] = useState<InvitedParticipantDetails[]>([]);
 
   useEffect(() => {
     const updateParticipants = () => {
-      
-      getUpdatedParticipantDetails(task, conversation, participantDetails).then(
-        participantDetails => {
-          if (participantDetails)
-            setParticipantDetails(participantDetails)
-        }
-      )
-    }
-
-    const updateInvitedParticipants = () => {
-      checkAndRemoveOldInvitedParticipants(task, conversation);
-    }
+      getUpdatedParticipantDetails(task, conversation, participantDetails).then((participantDetails) => {
+        if (participantDetails) setParticipantDetails(participantDetails);
+      });
+    };
 
     updateParticipants();
-    updateInvitedParticipants();
-    setInvitedParticipantDetails(getUpdatedInvitedParticipantDetails(conversation))
-
-    // for now just allow one outstanding invite to simplify routing. conversation.attribute.invites supports muliple though
-    if (countOfOutstandingInvitesForConversation(conversation))
-      setDisableNewInvites(true)
-    else
-      setDisableNewInvites(false)
-      
-  }, [conversation])
+    setInvitedParticipantDetails(getUpdatedInvitedParticipantDetails(conversation));
+  }, [conversation]);
 
   const handleKickParticipant = (interactionParticipantSid: string) => {
-    const payload : RemoveChatParticipantActionPayload = {task, interactionParticipantSid}
-    Actions.invokeAction("RemoveChatParticipant", payload)
-  }
+    const payload: RemoveChatParticipantActionPayload = { task, interactionParticipantSid };
+    Actions.invokeAction('RemoveChatParticipant', payload);
+  };
 
   const handleCancelInvite = (invitedParticipantDetails: InvitedParticipantDetails) => {
-    const payload: CancelChatParticipantInviteActionPayload = { conversation, invitesTaskSid: invitedParticipantDetails.invitesTaskSid }
-    Actions.invokeAction("CancelChatParticipantInvite", payload);
-  }
-  
-  return <ParticipantsTabContainer>
-    <Stack orientation="vertical" spacing="space40">
+    const payload: CancelChatParticipantInviteActionPayload = {
+      conversation,
+      invitesTaskSid: invitedParticipantDetails.invitesTaskSid,
+    };
+    Actions.invokeAction('CancelChatParticipantInvite', payload);
+  };
 
-      <Participants participantDetails={participantDetails} handleKickParticipant={handleKickParticipant} />
-                
-      <InvitedParticipants invitedParticipantDetails={invitedParticipantDetails} handleCancelInvite={handleCancelInvite} />
+  return (
+    <ParticipantsTabContainer>
+      <Stack orientation="vertical" spacing="space40">
+        <Participants participantDetails={participantDetails} handleKickParticipant={handleKickParticipant} />
 
-      <InviteParticipant task={task} disableNewInvites={disableNewInvites} />
-    </Stack>
- </ParticipantsTabContainer>
-}
-  
+        <InvitedParticipants
+          invitedParticipantDetails={invitedParticipantDetails}
+          handleCancelInvite={handleCancelInvite}
+        />
+      </Stack>
+    </ParticipantsTabContainer>
+  );
+};

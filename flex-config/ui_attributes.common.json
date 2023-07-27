@@ -10,7 +10,7 @@
         "enabled": false,
         "filter_teams_view": false
       },
-      "callbacks": {
+      "callback_and_voicemail": {
         "enabled": true,
         "allow_requeue": true,
         "max_attempts": 3,
@@ -20,26 +20,25 @@
         "enabled": true
       },
       "conversation_transfer": {
-        "enabled": false,
+        "enabled": true,
         "cold_transfer": true,
         "multi_participant": true
       },
       "chat_to_video_escalation": {
-        "enabled": false
+        "enabled": true
       },
       "conference": {
         "enabled": true,
-        "add_button": true,
         "hold_workaround": false
       },
       "enhanced_crm_container": {
-        "enabled": false
+        "enabled": true,
+        "url": "https://www.bing.com/search?q={{task.from}}",
+        "should_display_url_when_no_tasks": false,
+        "display_url_when_no_tasks": "https://www.bing.com"
       },
       "internal_call": {
-        "enabled": false
-      },
-      "override_queue_transfer_directory": {
-        "enabled": false
+        "enabled": true
       },
       "scrollable_activities": {
         "enabled": true
@@ -47,10 +46,14 @@
       "supervisor_barge_coach": {
         "enabled": true,
         "agent_coaching_panel": true,
-        "supervisor_monitor_panel": true
+        "supervisor_monitor_panel": true,
+        "agent_assistance": true,
+        "supervisor_alert_toggle": true
       },
       "omni_channel_capacity_management": {
-        "enabled": false
+        "enabled": false,
+        "channel": "chat",
+        "default_max_capacity": 2
       },
       "device_manager": {
         "enabled": true
@@ -77,11 +80,12 @@
       },
       "teams_view_filters": {
         "enabled": true,
-        "logFilters": true,
+        "log_filters": false,
         "applied_filters": {
+          "activities": true,
           "email": true,
           "department": true,
-          "queue_no_worker_data": true,
+          "queue_no_worker_data": false,
           "queue_worker_data": false,
           "team": true,
           "agent_skills": true
@@ -113,13 +117,13 @@
         "enabled": true
       },
       "schedule_manager": {
-        "enabled": false
+        "enabled": true
       },
       "multi_call": {
         "enabled": false
       },
       "hang_up_by": {
-        "enabled": false
+        "enabled": true
       },
       "chat_transfer": {
         "enabled": false
@@ -129,24 +133,109 @@
         "configuration": [
           {
             "channel": "voice",
-            "auto_accept": false,
-            "auto_select": false,
-            "auto_wrapup": false,
+            "auto_accept": true,
+            "auto_select": true,
+            "auto_wrapup": true,
             "required_attributes": [],
-            "wrapup_time": 30000
+            "wrapup_time": 30000,
+            "default_outcome": "Automatically completed"
           },
           {
             "channel": "chat",
-            "auto_accept": false,
-            "auto_select": false,
-            "auto_wrapup": false,
+            "auto_accept": true,
+            "auto_select": true,
+            "auto_wrapup": true,
             "required_attributes": [],
-            "wrapup_time": 30000
+            "wrapup_time": 30000,
+            "default_outcome": "Automatically completed"
           }
         ]
       },
       "supervisor_complete_reservation": {
+        "enabled": true,
+        "outcome": "Completed by supervisor"
+      },
+      "canned_responses": {
+        "enabled": true,
+        "location": "MessageInputActions"
+      },
+      "keyboard_shortcuts": {
         "enabled": true
+      },
+      "custom_hold_music": {
+        "enabled": false,
+        "url": ""
+      },
+      "custom_transfer_directory": {
+        "enabled": true,
+        "use_paste_search_icon": false,
+        "queue": {
+          "enabled": true,
+          "show_only_queues_with_available_workers": false,
+          "show_real_time_data": true,
+          "enforce_queue_filter_from_worker_object": true,
+          "enforce_global_exclude_filter": false,
+          "global_exclude_filter": ""
+        },
+        "external_directory": {
+          "enabled": true,
+          "skipPhoneNumberValidation": false,
+          "directory": [
+            {
+              "cold_transfer_enabled": true,
+              "warm_transfer_enabled": true,
+              "label": "Sample Entry",
+              "number": "+10000000000"
+            }
+          ]
+        }
+      },
+      "dispositions": {
+        "enabled": true,
+        "enable_notes": true,
+        "require_disposition": false,
+        "global_dispositions": [
+          "Resolved",
+          "Not Resolved",
+          "Follow-up Required",
+          "Escalation",
+          "Wrong Department"
+        ],
+        "per_queue": {
+          "exampleQueueSid": {
+            "require_disposition": true,
+            "dispositions": [
+              "Promotional Sale",
+              "Renewal"
+            ]
+          }
+        }
+      },
+      "emoji_picker": {
+        "enabled": true
+      },
+      "attribute_viewer": {
+        "enabled": true,
+        "enabled_for_agents": false
+      },
+      "admin_ui": {
+        "enabled": true
+      },
+      "localization": {
+        "enabled": false,
+        "show_menu": true
+      },
+      "park_interaction": {
+        "enabled": true
+      },
+      "teams_view_enhancements": {
+        "enabled": true,
+        "columns": {
+          "team": true,
+          "department": false,
+          "location": false,
+          "agent_skills": true
+        }
       }
     }
   }

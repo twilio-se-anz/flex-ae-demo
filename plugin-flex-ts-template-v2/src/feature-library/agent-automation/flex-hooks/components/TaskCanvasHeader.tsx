@@ -1,14 +1,12 @@
 import * as Flex from '@twilio/flex-ui';
+
 import AutoWrap from '../../custom-components/AutoComplete';
-import { isFeatureEnabled } from '../..';
+import { FlexComponent } from '../../../../types/feature-loader';
 
-export function addAutoWrap(flex: typeof Flex) {
-
-  if(!isFeatureEnabled()) return;
-
-  Flex.TaskCanvasHeader.Content.add(<AutoWrap key="auto-wrap" />,
-  {
+export const componentName = FlexComponent.TaskCanvasHeader;
+export const componentHook = function addAutoWrap(flex: typeof Flex) {
+  flex.TaskCanvasHeader.Content.add(<AutoWrap key="auto-wrap" />, {
     sortOrder: -1,
     if: (props) => props.task.status === 'wrapping',
   });
-}
+};

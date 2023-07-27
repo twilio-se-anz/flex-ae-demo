@@ -1,26 +1,20 @@
-import React, { Component } from "react";
-import IFrameWrapper from "./IFrameWrapper";
-import { useFlexSelector } from "@twilio/flex-ui";
-import { AppState } from '../../../../flex-hooks/states';
+import React from 'react';
+import { useFlexSelector } from '@twilio/flex-ui';
 
-type IFrameCRMComponentProps = {
-  baseUrl: string
-}
+import IFrameWrapper from './IFrameWrapper';
+import AppState from '../../../../types/manager/AppState';
 
-export const IFrameCRMComponent = ({baseUrl}: IFrameCRMComponentProps) => {
-
+export const IFrameCRMComponent = () => {
   const tasks = useFlexSelector((state: AppState) => state.flex.worker.tasks);
 
   // Only render iframes for tasks without a parent task
-  const tasksFiltered = Array.from(tasks.values()).filter(task => !task.attributes.parentTask);
+  const tasksFiltered = Array.from(tasks.values()).filter((task) => !task.attributes.parentTask);
 
   return (
     <div>
-      {tasksFiltered.map(task => (
-        <IFrameWrapper thisTask={task} key={task.taskSid} baseUrl={baseUrl} />
+      {tasksFiltered.map((task) => (
+        <IFrameWrapper thisTask={task} key={task.taskSid} />
       ))}
     </div>
   );
-}
-
-
+};

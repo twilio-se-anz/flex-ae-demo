@@ -1,6 +1,9 @@
-import { Stack, Card, Heading } from "@twilio-paste/core"
-import { InvitedParticipant } from "./InvitedParticipant/InvitedParticipant";
-import { InvitedParticipantDetails } from "../../../types/InvitedParticipantDetails"
+import { Stack, Card, Heading } from '@twilio-paste/core';
+import { Template, templates } from '@twilio/flex-ui';
+
+import { InvitedParticipant } from './InvitedParticipant/InvitedParticipant';
+import { InvitedParticipantDetails } from '../../../types/InvitedParticipantDetails';
+import { StringTemplates } from '../../../flex-hooks/strings/ChatTransferStrings';
 
 interface InvitedParticipantsProps {
   invitedParticipantDetails: InvitedParticipantDetails[];
@@ -8,18 +11,27 @@ interface InvitedParticipantsProps {
 }
 
 export const InvitedParticipants = ({ invitedParticipantDetails, handleCancelInvite }: InvitedParticipantsProps) => {
-    
-    const invitedParticipants = invitedParticipantDetails.map((invitedParticipantDetail) => {
-      const participantName = invitedParticipantDetail.targetName;
-      const inviteTargetType = invitedParticipantDetail.inviteTargetType;
-      return <InvitedParticipant participantName={participantName} inviteTargetType={inviteTargetType} handleCancelInvite={() => handleCancelInvite(invitedParticipantDetail)} />
-    })
-    
+  const invitedParticipants = invitedParticipantDetails.map((invitedParticipantDetail) => {
+    const participantName = invitedParticipantDetail.targetName;
+    const { inviteTargetType } = invitedParticipantDetail;
     return (
-      <Card padding="space60">
-            <Heading as="h2" variant="heading20">Invited Participants</Heading>
-            <Stack orientation="vertical" spacing="space20">{invitedParticipants}</Stack>
+      <InvitedParticipant
+        participantName={participantName}
+        key={invitedParticipantDetail.invitesTaskSid}
+        inviteTargetType={inviteTargetType}
+        handleCancelInvite={() => handleCancelInvite(invitedParticipantDetail)}
+      />
+    );
+  });
 
-      </Card>
-    )
-}
+  return (
+    <Card padding="space60">
+      <Heading as="h2" variant="heading20">
+        <Template source={templates[StringTemplates.InvitedParticipants]} />
+      </Heading>
+      <Stack orientation="vertical" spacing="space20">
+        {invitedParticipants}
+      </Stack>
+    </Card>
+  );
+};
